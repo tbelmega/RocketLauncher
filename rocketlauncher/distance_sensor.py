@@ -51,28 +51,28 @@ def trigger_sensor():
 if __name__ == '__main__':
     start_time = time.time()
 
-    last_three_distances = [distance_in_meters(), distance_in_meters(), distance_in_meters()]
-    average_distance = 0
+    distance = 0
+    last_distance = 0
     i = 0
 
     try:
         while True:
-            i = (i + 1) % 3
-            last_three_distances[i] = distance_in_meters()
-            last_average_distance = average_distance
-            average_distance = (last_three_distances[0] + last_three_distances[1] + last_three_distances[2]) / 3
+            i += 1
+            last_distance = distance
+            distance = distance_in_meters()
             # print ("Average distance during the last three measures = %.3f m" % average_distance)
 
-            if abs(last_average_distance - average_distance) > 0.2:
+            if abs(last_distance - distance) > 0.2:
                 elapsed = time.time() - start_time
-                print("TRIGGER after " + str(elapsed))
-                print("Last average " + str(last_average_distance))
-                print("New average " + str(average_distance))
+                print("\nTRIGGER after " + str(elapsed))
+                print("Last distance " + str(distance))
+                print("New distance " + str(distance))
 
             # next measure in 0.5 seconds
             time.sleep(0.5)
 
     # abort via CTRL + C
     except KeyboardInterrupt:
-        print("User interrupt")
+        print("\nUser interrupt")
+        print("Sensor triggered " + str(i) + " times.")
         GPIO.cleanup()
