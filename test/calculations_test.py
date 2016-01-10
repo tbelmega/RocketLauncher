@@ -23,7 +23,11 @@ class CalculationsTest(unittest.TestCase):
 
     def testAngleAlpha(self):
         value_of_angle_alpha = calc_angle_degrees_of_triangle(4, 3)
-        self.assertAlmostEquals(0.64350, value_of_angle_alpha, 5)
+        self.assertAlmostEquals(36.86, value_of_angle_alpha, None, None, 0.02)
+
+    def testAngleAlpha2(self):
+        value_of_angle_alpha = calc_angle_degrees_of_triangle(925, 150)
+        self.assertAlmostEquals(9.20, value_of_angle_alpha, None, None, 0.02)
 
     def testDistanceFromTimeSpan(self):
         time_span_that_sound_needs_for_two_meters = 0.005830904

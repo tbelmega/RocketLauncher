@@ -35,7 +35,8 @@ def calc_angle_degrees_of_triangle(adjacent, opposite):
     :return: the value of hte angle ALPHA in degrees
     """
     sin_of_triangle = calc_sin_of_triangle(adjacent, opposite)
-    return math.asin(sin_of_triangle)
+    radians = math.asin(sin_of_triangle)
+    return radians * 180 / math.pi
 
 
 def calc_distance_from_time_span(time_span_there_and_back):
