@@ -1,6 +1,9 @@
 import RPi.GPIO as GPIO
 import time
+import send
 from calculations import calc_distance_from_time_span
+
+TOLERANCE = 0.2  # tolerance in meters. do not trigger if difference is lower than 0.2 meters.
 
 # GPIO Mode (BOARD / BCM)
 GPIO.setmode(GPIO.BCM)
@@ -48,6 +51,12 @@ def trigger_sensor():
     GPIO.output(GPIO_TRIGGER, False)
 
 
+def significant_difference_detected(last_distance, distance, i):
+    distance_diff_greater_than_tolerance = abs(last_distance - distance) > TOLERANCE
+    at_least_5th_measure = i >= 5  # ignore the first 5 measures, they may be inaccurate
+    return distance_diff_greater_than_tolerance and at_least_5th_measure
+
+
 if __name__ == '__main__':
     start_time = time.time()
 
@@ -60,13 +69,11 @@ if __name__ == '__main__':
             i += 1
             last_distance = distance
             distance = distance_in_meters()
-            # print ("Average distance during the last three measures = %.3f m" % average_distance)
 
-            if abs(last_distance - distance) > 0.2:
-                elapsed = time.time() - start_time
-                print("\nTRIGGER after " + str(elapsed))
-                print("Last distance " + str(distance))
-                print("New distance " + str(distance))
+            print("Measured a distance of %.3f m" % distance)
+
+            if significant_difference_detected(last_distance, distance, i):
+                send.send_trigger_message(distance)
 
             # next measure in 0.5 seconds
             time.sleep(0.5)
