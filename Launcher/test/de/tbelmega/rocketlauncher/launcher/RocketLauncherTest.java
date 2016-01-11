@@ -1,9 +1,8 @@
-package de.tbelmega.rocketlauncher;
+package de.tbelmega.rocketlauncher.launcher;
 
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.AssertJUnit.*;
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * Created by Thiemo on 10.01.2016.
@@ -12,25 +11,6 @@ public class RocketLauncherTest {
 
     RocketLauncher rocketLauncher = new RocketLauncher();
 
-    @Test
-    public void testThatLEDisBlinking() throws Exception {
-        //arrange
-        rocketLauncher.reset();
-
-        //act
-        rocketLauncher.blink(500);
-
-    }
-
-    @Test
-    public void testThatLEDisBlinkingFor10Seconds() throws Exception {
-        //arrange
-        rocketLauncher.reset();
-
-        //act
-        rocketLauncher.startBlinking(500);
-        rocketLauncher.stopBlinking();
-    }
 
     @Test
     public void testThatLauncherFires() throws Exception {

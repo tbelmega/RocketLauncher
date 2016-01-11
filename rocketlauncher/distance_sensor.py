@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 import send
 from calculations import calc_distance_from_time_span
+from calculations import calc_angle_degrees_of_triangle
 
 TOLERANCE = 0.2  # tolerance in meters. do not trigger if difference is lower than 0.2 meters.
 
@@ -29,6 +30,8 @@ def distance_in_meters():
 
 
 def measure_time_elapsed():
+    start = time.time()
+
     # get time as long as ECHO is LOW
     while GPIO.input(GPIO_ECHO) == 0:
         start = time.time()
@@ -52,7 +55,7 @@ def trigger_sensor():
 
 
 def significant_difference_detected(last_distance, distance, i):
-    distance_diff_greater_than_tolerance = abs(last_distance - distance) > TOLERANCE
+    distance_diff_greater_than_tolerance = last_distance - distance > TOLERANCE
     at_least_5th_measure = i >= 5  # ignore the first 5 measures, they may be inaccurate
     return distance_diff_greater_than_tolerance and at_least_5th_measure
 
@@ -73,7 +76,9 @@ if __name__ == '__main__':
             print("Measured a distance of %.3f m" % distance)
 
             if significant_difference_detected(last_distance, distance, i):
-                send.send_trigger_message(distance)
+                # measure again immediately and to double-check the distance
+                if not significant_difference_detected(distance, distance_in_meters(), i):
+                    send.send_trigger_message(distance, calc_angle_degrees_of_triangle(2, distance))
 
             # next measure in 0.5 seconds
             time.sleep(0.5)
@@ -83,3 +88,4 @@ if __name__ == '__main__':
         print("\nUser interrupt")
         print("Sensor triggered " + str(i) + " times.")
         GPIO.cleanup()
+        send.close_connection()

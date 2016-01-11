@@ -1,4 +1,4 @@
-package de.tbelmega.rocketlauncher;
+package de.tbelmega.rocketlauncher.launcher;
 
 /**
  * Created by Thiemo on 10.01.2016.

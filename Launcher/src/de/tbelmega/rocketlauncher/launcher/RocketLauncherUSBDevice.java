@@ -1,4 +1,4 @@
-package de.tbelmega.rocketlauncher;
+package de.tbelmega.rocketlauncher.launcher;
 
 import ch.ntb.usb.Device;
 import ch.ntb.usb.USB;
